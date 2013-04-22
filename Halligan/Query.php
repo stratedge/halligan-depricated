@@ -385,6 +385,39 @@ class Query extends \Halligan\Database {
 		return $this->_result->rowCount();
 	}
 
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public function startTransaction()
+	{
+		$this->connect()->beginTransaction();
+
+		return $this;
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public function rollBack()
+	{
+		$this->connect()->rollBack();
+
+		return $this;
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public function commit()
+	{
+		$this->connect()->commit();
+
+		return $this;
+	}
+
 }
 
 /* End of file Query.php */

@@ -32,7 +32,7 @@ class Autoloader {
 
 		if($path !== FALSE)
 		{
-			include_once $path;
+			require_once $path;
 			return TRUE;
 		}
 
@@ -58,7 +58,7 @@ class Autoloader {
 		//If we found a matching file, load it, and alias the class
 		if($path !== FALSE)
 		{
-			include_once $path;
+			require_once $path;
 			$namespace = resolve_namespace_class($path, $class);
 			class_alias($namespace, $class);
 			return TRUE;
@@ -77,7 +77,7 @@ class Autoloader {
 
 			if($path !== FALSE)
 			{
-				include_once $path;
+				require_once $path;
 				$namespace = resolve_namespace_class($path, $class);
 				class_alias($namespace, $class);
 				return TRUE;
