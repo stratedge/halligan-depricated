@@ -12,6 +12,6 @@ To-Do List
 *	Maybe add a memcache class?
 *	Add joins to the query class
 *	Add in support to call pages from the command line (CLI)
-*	Adjust the capitalization on files and folders - all lowercase really won't do for multi-word file names
+*	<strike>Adjust the capitalization on files and folders - all lowercase really won't do for multi-word file names</strike>
 *	3rd party support (try it out with Doctrine to test)
 *	Add support for environements, including custom config items for different environments
