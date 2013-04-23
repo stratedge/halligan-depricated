@@ -56,11 +56,31 @@ if(function_exists("us2cc") === FALSE)
 
 if(function_exists("is_assoc") === FALSE)
 {
-	function is_assoc(Array $array)
+	function is_assoc($array)
 	{
-		return (bool) count(array_filter(array_keys($array), 'is_string'));
+		return (bool) is_array($array) && count(array_filter(array_keys($array), 'is_string'));
 	}
 }
+
+
+//-------------------------------------------------------------------------------------------------
+
+
+if(function_exists("is_simple") === FALSE)
+{
+	function is_simple($array)
+	{
+		if(!is_array($array)) return FALSE;
+		
+		foreach($array as $key => $item)
+		{
+			if(!is_int($key) || is_array($item) || is_object($item)) return FALSE;
+		}
+		
+		return TRUE;
+	}
+}
+
 
 
 //-------------------------------------------------------------------------------------------------

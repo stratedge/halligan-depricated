@@ -6,6 +6,10 @@ use PDO;
 
 class Query extends \Halligan\Database {
 
+	protected $_insert_ignore = FALSE;
+	protected $_insert_columns = array();
+	protected $_insert_values = array();
+	protected $_on_duplicate_keys = array();
 	protected $_orders = array();
 	protected $_result;
 	protected $_selects = array('*');
@@ -224,7 +228,7 @@ class Query extends \Halligan\Database {
 	//---------------------------------------------------------------------------------------------
 	
 
-	public function set($column, $value = NULL)
+	public function set($column, $value = NULL, $escape = TRUE)
 	{
 		if((is_array($column) && is_assoc($column)) || is_object($column)) return $this;
 
@@ -235,9 +239,11 @@ class Query extends \Halligan\Database {
 				call_user_func_array(array($this, 'set'), (array) $set);
 			}
 		}
-		elseif(!is_null($value))
+		else
 		{
-			$this->_sets[] = sprintf("%s = %s", $column, $this->escape($value));
+			$this->_sets[] = sprintf("%s = %s", $column, $escape ? $this->escape($value) : $value);
+			$this->_insert_columns[] = $column;
+			$this->_insert_values[0][] = $escape ? $this->escape($value) : $value;
 		}
 
 		return $this;
@@ -258,7 +264,7 @@ class Query extends \Halligan\Database {
 		$parts = array_filter(array($start, $set, $where));
 
 		$sql = implode(" " , $parts) . ";";
-
+		
 		$this->_clear();
 
 		return $this->query($sql, $this);
@@ -274,9 +280,118 @@ class Query extends \Halligan\Database {
 		return "UPDATE " . $this->_table;
 	}
 
+
+	//---------------------------------------------------------------------------------------------
+
+
 	protected function _buildSet()
 	{
 		return "SET " . implode(", ", $this->_sets);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	public function values(Array $values, $escape = TRUE)
+	{
+		if(!is_assoc($values))
+		{
+			foreach($values as $value)
+			{
+				$this->values($value, $escape);
+			}
+		}
+		else
+		{
+			$this->_insert_columns = array_keys($values);
+
+			if($escape)
+			{
+				foreach($values as &$value)
+				{
+					$value = $this->escape($value);
+				}
+			}
+
+			$this->_insert_values[] = array_values($values);
+			
+		}
+		
+		return $this;
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	public function insertIgnore()
+	{
+		$this->_insert_ignore = TRUE;
+
+		return $this;
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	public function insert($table = NULL, Array $data = NULL, $escape = TRUE)
+	{
+		if(!is_null($data))
+		{
+			$this->values($data, $escape);
+		}
+
+		return $this->_buildInsert($table);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	protected function _buildInsert($table)
+	{
+		$open = $this->_insert_ignore ? "INSERT IGNORE INTO" : "INSERT INTO";
+
+		$this->_table = $table ?: $this->_table;
+
+		$columns = $this->_buildColumns();
+
+		$values = $this->_buildValues();
+
+		$parts = array_filter(array($open, $this->_table, $columns, "VALUES", $values));
+
+		$sql = implode(" " , $parts);
+
+		$this->_clear();
+
+		return $this->query($sql, $this);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	protected function _buildColumns()
+	{
+		return sprintf("(%s)", implode(", ", $this->_insert_columns));
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	protected function _buildValues()
+	{
+		$values = array();
+
+		foreach($this->_insert_values as $value)
+		{
+			$values[] = implode(",", $value);
+		}
+
+		return sprintf("(%s)", implode("),(", $values));
 	}
 
 
