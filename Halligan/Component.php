@@ -4,9 +4,11 @@ namespace Halligan;
 
 class Component {
 
-	public function __construct()
+	protected $_global = array();
+
+	public function __construct(Array $global = array())
 	{
-		//Placeholder
+		$this->_global = $global;
 	} 
 
 }
