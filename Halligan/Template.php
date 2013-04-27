@@ -11,9 +11,10 @@ class Template {
 	//---------------------------------------------------------------------------------------------
 
 
-	public function __construct($template = NULL)
+	public function __construct($template = NULL, Array $data = array())
 	{
 		$this->setTemplate($template);
+		$this->addData($data);
 	}
 
 
