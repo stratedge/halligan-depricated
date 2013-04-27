@@ -165,7 +165,7 @@ class Template {
 		if(file_exists($compiled_path) === FALSE || filemtime($path) >= filemtime($compiled_path))
 		{
 			$contents = file_get_contents($path);
-			$template = preg_replace_callback('/\{(\/if|if:|var:escape:|var:|\/foreach|foreach:|template:)(.+)*\}/', array($this, '_parseTag'), $contents);
+			$template = preg_replace_callback('/\{(\/if|if:|var:escape:|var:|\/foreach|foreach:|template:)([^\}]+)*\}/', array($this, '_parseTag'), $contents);
 			file_put_contents($compiled_path, $template);
 		}
 
