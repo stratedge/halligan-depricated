@@ -70,10 +70,18 @@ class Page extends \Halligan\Controller {
 
 	public function addGlobal($key, $value = NULL)
 	{
+		if(empty($key)) return FALSE;
+
 		if(is_array($key) || is_object($key))
 		{
 			$this->_global = array_merge($this->_global, (array) $key);
 		}
+		else
+		{
+			$this->_global[$key] = $value;
+		}
+
+		return TRUE;
 	}
 }
 
