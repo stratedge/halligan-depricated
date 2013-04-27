@@ -29,6 +29,8 @@ class Component {
 		}
 
 		if(isset($this->_global[$key])) return $this->_global[$key];
+
+		return NULL;
 	}
 
 }
