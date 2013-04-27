@@ -1,6 +1,6 @@
 <?php
 
-namespace Halligan\Controller;
+namespace Halligan;
 
 class Controller {
 
