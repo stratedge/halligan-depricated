@@ -54,7 +54,7 @@ class Page extends \Halligan\Controller {
 
 			$params = (!isset($component->options['params']) || empty($component->options['params']) || !is_array($component->options['params'])) ? array() : $component->options['params'];
 
-			$class = new $component->class();
+			$class = new $component->class($this->_global);
 
 			if(!method_exists($class, $method)) continue;
 
