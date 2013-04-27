@@ -7,11 +7,14 @@ Halligan is a free-to-use library that seeks to create a componentized library s
 
 To-Do List
 ----------
-*	Sanitize input so that it is as safe as possible from XSS and injections
+*	Sanitize input so that it is as safe as possible from XSS and injections? Is context-indepenent sanitation really valuable?
 *	Add some simple session handling
 *	Maybe add a memcache class?
+*	Make the Database/Query classes usable beyond just MySQL
 *	Add joins to the query class
+*	Add where-grouping capability to the query class
 *	Add in support to call pages from the command line (CLI)
-*	~~Adjust the capitalization on files and folders - all lowercase really won't do for multi-word file names~~
 *	3rd party support (try it out with Doctrine to test)
 *	Add support for environements, including custom config items for different environments
+*	~~Add insert functionality to the query class~~
+*	~~Adjust the capitalization on files and folders - all lowercase really won't do for multi-word file names~~
