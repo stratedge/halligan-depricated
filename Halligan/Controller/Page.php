@@ -63,6 +63,18 @@ class Page extends \Halligan\Controller {
 
 		Response::setOutput($layout->build());
 	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	public function addGlobal($key, $value = NULL)
+	{
+		if(is_array($key) || is_object($key))
+		{
+			$this->_global = array_merge($this->_global, (array) $key));
+		}
+	}
 }
 
 /* End of file Page.php */

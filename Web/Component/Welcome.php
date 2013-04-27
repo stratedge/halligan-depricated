@@ -2,7 +2,7 @@
 
 namespace Web\Component;
 
-use \Halligan\Template;
+use \Template;
 
 class Welcome extends \Halligan\Component {
 

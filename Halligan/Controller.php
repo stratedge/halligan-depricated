@@ -12,4 +12,4 @@ class Controller {
 }
 
 /* End of file Controller.php */
-/* Location: ./Halligan/Controller/Controller.php */
+/* Location: ./Halligan/Controller.php */
