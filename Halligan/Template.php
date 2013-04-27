@@ -111,6 +111,10 @@ class Template {
 		{
 			case 'var:':
 				if(!isset($matches[2])) return NULL;
+
+				//Allowing dot notation in variable names for arrays
+				if(strpos($matches[2], '.') !== FALSE) $matches[2] = $this->_parseDotNotation($matches[2]);
+
 				return sprintf('<?php if(isset($%s)) echo $%s; ?>', $matches[2], $matches[2]);
 				break;
 
@@ -195,6 +199,16 @@ class Template {
 
 		//Echo out building the template
 		echo $tpl->build();
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	protected function _parseDotNotation($var)
+	{
+		$parts = explode(".", $var);
+		return sprintf("%s['%s']", $parts[0], implode("']['", array_slice($parts, 1)));
 	}
 
 }
