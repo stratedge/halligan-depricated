@@ -72,7 +72,7 @@ class Page extends \Halligan\Controller {
 	{
 		if(is_array($key) || is_object($key))
 		{
-			$this->_global = array_merge($this->_global, (array) $key));
+			$this->_global = array_merge($this->_global, (array) $key);
 		}
 	}
 }
