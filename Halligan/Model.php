@@ -2,6 +2,8 @@
 
 namespace Halligan;
 
+use \Query;
+
 class Model {
 
 	public function __construct()
