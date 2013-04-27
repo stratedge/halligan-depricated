@@ -6,7 +6,7 @@ use \Response;
 use \Layout;
 use \Config;
 
-class Page extends \Halligan\Controller\Controller {
+class Page extends \Halligan\Controller {
 
 	protected $_components = array();
 	protected $_global = array();
