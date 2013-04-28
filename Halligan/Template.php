@@ -35,7 +35,7 @@ class Template {
 	public function addData($map, $value = NULL)
 	{
 		//If the map is an associative array, merge into our data array
-		if(is_assoc($map) || is_obect($map))
+		if(is_assoc($map) || is_object($map))
 		{
 			return ($this->_data = array_merge($this->_data, $this->_recursiveConvertObjectToArray($map)));
 		}
