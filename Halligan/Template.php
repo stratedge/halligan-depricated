@@ -35,12 +35,12 @@ class Template {
 	public function addData($map, $value = NULL)
 	{
 		//If the map is an associative array, merge into our data array
-		if(is_array($map) && is_assoc($map) && !empty($map))
+		if(is_assoc($map) || is_obect($map))
 		{
-			return ($this->_data = array_merge($this->_data, $map));
+			return ($this->_data = array_merge($this->_data, $this->_recursiveConvertObjectToArray($map)));
 		}
 
-		//Is the specified key a value php variable name?
+		//Is the specified key a valid php variable name?
 		if(!is_string($map) || is_numeric($map)) return FALSE;
 
 		//Set the specified key in the data array to the passed value
@@ -212,11 +212,25 @@ class Template {
 	protected function _parseDotNotation($var)
 	{
 		//Return the value if there is no dot in it
-		if(strpos($var, '.') !== FALSE) return sprintf("$%s", $var);
+		if(strpos($var, '.') === FALSE) return sprintf("$%s", $var);
 
 		//Construct an array syntax, casting the variable to an array in case its an object
 		$parts = explode(".", $var);
-		return sprintf("(array) $%s['%s']", $parts[0], implode("']['", array_slice($parts, 1)));
+		return sprintf("$%s['%s']", $parts[0], implode("']['", array_slice($parts, 1)));
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	protected function _recursiveConvertObjectToArray($value)
+	{
+		foreach($value as $key => &$val)
+		{
+			if(is_object($val)) $val = $this->_recursiveConvertObjectToArray((array) $val);
+		}
+
+		return $value;
 	}
 
 }
