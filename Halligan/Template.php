@@ -113,20 +113,24 @@ class Template {
 				if(!isset($matches[2])) return NULL;
 
 				//Allowing dot notation in variable names for arrays
-				if(strpos($matches[2], '.') !== FALSE) $matches[2] = $this->_parseDotNotation($matches[2]);
+				$matches[2] = $this->_parseDotNotation($matches[2]);
 
-				return sprintf('<?php if(isset($%s)) echo $%s; ?>', $matches[2], $matches[2]);
+				return sprintf('<?php if(isset(%s)) echo %s; ?>', $matches[2], $matches[2]);
 				break;
 
 			case 'var:escape:':
 				if(!isset($matches[2])) return NULL;
-				return sprintf('<?php echo addslashes($%s); ?>', $matches[2]);
+
+				//Allowing dot notation in variable names for arrays
+				$matches[2] = $this->_parseDotNotation($matches[2]);
+
+				return sprintf('<?php if(isset(%s)) echo addslashes(%s); ?>', $matches[2], $matches[2]);
 
 			case 'if:':
 				$condition = preg_replace_callback(
 					'/[\"\']*[A-Za-z][A-Za-z0-9\_\[\]\'\"]+[\"\']*/',
 					function($matches) {
-						return preg_match('/^[\"\'][\w]+[\"\']$/', $matches[0]) ? $matches[0] : sprintf('$%s', $matches[0]);
+						return preg_match('/^[\"\'][\w]+[\"\']$/', $matches[0]) ? $matches[0] : $this->_parseDotNotation($matches[0]);
 					},
 					$matches[2]
 				);
@@ -139,8 +143,8 @@ class Template {
 
 			case 'foreach:':
 				$parts = explode(":", $matches[2]);
-				if(count($parts) < 3) return sprintf('<?php foreach($%s as $%s): ?>', $parts[0], $parts[1]);
-				if(count($parts) >= 3) return sprintf('<?php foreach($%s as $%s => $%s): ?>', $parts[0], $parts[1], $parts[2]);
+				if(count($parts) < 3) return sprintf('<?php foreach(%s as $%s): ?>', $this->_parseDotNotation($parts[0]), $parts[1]);
+				if(count($parts) >= 3) return sprintf('<?php foreach(%s as $%s => $%s): ?>', $this->_parseDotNotation($parts[0]), $parts[1], $parts[2]);
 				break;
 
 			case '/foreach':
@@ -207,8 +211,12 @@ class Template {
 
 	protected function _parseDotNotation($var)
 	{
+		//Return the value if there is no dot in it
+		if(strpos($var, '.') !== FALSE) return sprintf("$%s", $var);
+
+		//Construct an array syntax, casting the variable to an array in case its an object
 		$parts = explode(".", $var);
-		return sprintf("%s['%s']", $parts[0], implode("']['", array_slice($parts, 1)));
+		return sprintf("(array) $%s['%s']", $parts[0], implode("']['", array_slice($parts, 1)));
 	}
 
 }
