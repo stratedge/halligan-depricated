@@ -44,7 +44,7 @@ class Template {
 		if(!is_string($map) || is_numeric($map)) return FALSE;
 
 		//Set the specified key in the data array to the passed value
-		return ($this->_data[$map] = $value);
+		return ($this->_data[$map] = $this->_recursiveConvertObjectToArray($value));
 	}
 
 
@@ -225,6 +225,8 @@ class Template {
 
 	protected function _recursiveConvertObjectToArray($value)
 	{
+		if(is_object($value)) $value = (array) $value;
+		
 		foreach($value as $key => &$val)
 		{
 			if(is_object($val)) $val = $this->_recursiveConvertObjectToArray((array) $val);
