@@ -162,6 +162,12 @@ register_shutdown_function(function() {
 
 
 /**
+ * Set error reporting to all errors
+ */
+error_reporting(-1);
+
+
+/**
  * Load all the autoloader class(es)
  * We load them all backwards incase any one extends another
  */
