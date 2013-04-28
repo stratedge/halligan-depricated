@@ -24,7 +24,7 @@ Halligan is a free-to-use platform that seeks to create a componentized library 
 
 #### Config Class
 
-*	See if using output buffering when including config files and then cleaning it helps reduce memory usage
+*	~~See if using output buffering when including config files and then cleaning it helps reduce memory usage~~
 
 
 #### Email Class

@@ -41,8 +41,6 @@ class Config {
 
 		static::$configs_loaded[] = $config;
 
-		unset($$config, $config);
-		
 		return TRUE;
 	}
 
