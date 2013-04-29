@@ -110,29 +110,27 @@ class Template {
 		switch($matches[1])
 		{
 			case 'var:':
+			case 'echo:':
+			case 'var:escape:':
+			case 'echo:escape:':
 				if(!isset($matches[2])) return NULL;
-
-				//Allowing dot notation in variable names for arrays
-				$matches[2] = $this->_parseDotNotation($matches[2]);
-
-				return sprintf('<?php if(isset(%s)) echo %s; ?>', $matches[2], $matches[2]);
+				return $this->_parseEchoTag($matches[2], strpos($matches[1], ":escape") !== FALSE);
 				break;
 
-			case 'var:escape:':
-				if(!isset($matches[2])) return NULL;
-
-				//Allowing dot notation in variable names for arrays
-				$matches[2] = $this->_parseDotNotation($matches[2]);
-
-				return sprintf('<?php if(isset(%s)) echo addslashes(%s); ?>', $matches[2], $matches[2]);
-
 			case 'if:':
+				if(!isset($matches[2])) return NULL;
 				$condition = $this->_parseIfCondition($matches[2]);
 				return sprintf('<?php if(%s): ?>', $condition);
 				break;
 
 			case '/if':
 				return '<?php endif; ?>';
+				break;
+
+			case 'if:echo:':
+			case 'if:echo:escape:':
+				if(!isset($matches[2])) return NULL;
+				return $this->_parseEchoIf($matches[2], strpos($matches[1], ":escape") !== FALSE);
 				break;
 
 			case 'foreach:':
@@ -149,6 +147,8 @@ class Template {
 				return sprintf('<?php $this->_parseTemplate("%s"); ?>', $matches[2]);
 				break;
 		}
+
+		return NULL;
 	}
 
 
@@ -163,7 +163,7 @@ class Template {
 		if(file_exists($compiled_path) === FALSE || filemtime($path) >= filemtime($compiled_path))
 		{
 			$contents = file_get_contents($path);
-			$template = preg_replace_callback('/\{(\/if|if:|var:escape:|var:|\/foreach|foreach:|template:)([^\}]+)*\}/', array($this, '_parseTag'), $contents);
+			$template = preg_replace_callback('/\{(\/if|if:echo:escape:|if:echo:|if:|var:escape:|var:|echo:escape:|echo:|\/foreach|foreach:|template:)([^\}]+)*\}/', array($this, '_parseTag'), $contents);
 			file_put_contents($compiled_path, $template);
 		}
 
@@ -205,8 +205,8 @@ class Template {
 
 	protected function _parseDotNotation($var)
 	{
-		//Return the value if there is no dot in it
-		if(strpos($var, '.') === FALSE) return sprintf("$%s", $var);
+		//Return the value if there is no dot in it, with a $ if it is a valid variable name
+		if(strpos($var, '.') === FALSE) return preg_match('/^[\"\'][^\"\']+[\"\']$/', $var) === 0 ? sprintf("$%s", $var) : $var;
 
 		//Construct an array syntax, casting the variable to an array in case its an object
 		$parts = explode(".", $var);
@@ -252,6 +252,64 @@ class Template {
 	protected function _parseIfVariable($matches)
 	{
 		return preg_match('/^[\"\'][\w]+[\"\']$/', $matches[0]) ? $matches[0] : $this->_parseDotNotation($matches[0]);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	protected function _validVariableName($var)
+	{
+		return preg_match('/^[\"\'].+[\"\']$/', $var) === 0;
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	protected function _parseEchoIf($body, $escape)
+	{
+		$parts = explode(":", $body);
+		
+		//Make sure we have at least a condition
+		if(!$parts[0]) return NULL;
+
+		//Parse the condition statement
+		$condition = $this->_parseIfCondition($parts[0]);
+
+		//Parse the main echo
+		$var = $this->_parseEchoTag($parts[1], $escape, FALSE);
+
+		//If we have an alternative echo, parse it
+		$alt = NULL;
+
+		if(isset($parts[2]))
+		{
+			$alt = sprintf(" else { %s }", $this->_parseEchoTag($parts[2], $escape, FALSE));
+		}
+
+		return sprintf("<?php if(%s) { %s }%s ?>", $condition, $var, $alt);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	protected function _parseEchoTag($var, $escape = FALSE, $incl_php = TRUE)
+	{
+		//Check if this is a variable or straight text
+		$valid = $this->_validVariableName($var);
+
+		if($valid) $var = $this->_parseDotNotation($var);
+		 
+		//If this is a valid variable, let's add the isset
+		$pre = $valid ? sprintf("if(isset(%s)) ", $var) : NULL;
+
+		$post = $escape ? sprintf("addslashes(%s)", $var) : $var;
+
+		$tag = sprintf("%secho %s;", $pre, $post);
+
+		return $incl_php ? sprintf("<?php %s ?>", $tag) : $tag;
 	}
 
 }
