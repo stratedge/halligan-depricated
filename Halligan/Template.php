@@ -227,9 +227,12 @@ class Template {
 	{
 		if(is_object($value)) $value = (array) $value;
 		
-		foreach($value as $key => &$val)
+		if(is_array($value))
 		{
-			if(is_object($val)) $val = $this->_recursiveConvertObjectToArray((array) $val);
+			foreach($value as $key => &$val)
+			{
+				if(is_object($val)) $val = $this->_recursiveConvertObjectToArray((array) $val);
+			}
 		}
 
 		return $value;
