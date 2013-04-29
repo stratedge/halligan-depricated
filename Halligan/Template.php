@@ -127,13 +127,7 @@ class Template {
 				return sprintf('<?php if(isset(%s)) echo addslashes(%s); ?>', $matches[2], $matches[2]);
 
 			case 'if:':
-				$condition = preg_replace_callback(
-					'/[\"\']*[A-Za-z][A-Za-z0-9\_\[\]\'\"]+[\"\']*/',
-					function($matches) {
-						return preg_match('/^[\"\'][\w]+[\"\']$/', $matches[0]) ? $matches[0] : $this->_parseDotNotation($matches[0]);
-					},
-					$matches[2]
-				);
+				$condition = $this->_parseIfCondition($matches[2]);
 				return sprintf('<?php if(%s): ?>', $condition);
 				break;
 
@@ -236,6 +230,28 @@ class Template {
 		}
 
 		return $value;
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	protected function _parseIfCondition($match)
+	{
+		return preg_replace_callback(
+			'/[\"\']*[A-Za-z][A-Za-z0-9\_\[\]\'\"]+[\"\']*/',
+			"self::_parseIfVariable",
+			$match
+		);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	protected function _parseIfVariable($matches)
+	{
+		return preg_match('/^[\"\'][\w]+[\"\']$/', $matches[0]) ? $matches[0] : $this->_parseDotNotation($matches[0]);
 	}
 
 }

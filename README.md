@@ -60,11 +60,12 @@ Halligan is a free-to-use platform that seeks to create a componentized library 
 
 #### Template Class
 
+*	Create a template tag that is "echo" and behaves the same as "var"
 *	Add a new template tag to accept a condition and a value to print if true (and maybe a value to print if false)
-*	Fix a bug in the if template tag parsing where $this is being used out of context
-*	Fix a bug in the addData method where non-arrays are being passed to a foreach as part of the recursive de-objectifying script
 *	~~Ensure that all objects passed as data to a template are converted to arrays to allow for dot notation for objects, too (requires recursively going through all array keys and object properties, yeouch)~~
 *	~~Allow variables that are keys in arrays to be referencable using dot notation (var.key = $var['key'])~~
+*	~~Fix a bug in the addData method where non-arrays are being passed to a foreach as part of the recursive de-objectifying script~~
+*	~~Fix a bug in the if template tag parsing where $this is being used out of context~~
 
 
 #### TBD
