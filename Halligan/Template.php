@@ -127,7 +127,9 @@ class Template {
 				return '<?php endif; ?>';
 				break;
 
+			case 'if:var:':
 			case 'if:echo:':
+			case 'if:var:escape:':
 			case 'if:echo:escape:':
 				if(!isset($matches[2])) return NULL;
 				return $this->_parseEchoIf($matches[2], strpos($matches[1], ":escape") !== FALSE);
@@ -163,7 +165,7 @@ class Template {
 		if(file_exists($compiled_path) === FALSE || filemtime($path) >= filemtime($compiled_path))
 		{
 			$contents = file_get_contents($path);
-			$template = preg_replace_callback('/\{(\/if|if:echo:escape:|if:echo:|if:|var:escape:|var:|echo:escape:|echo:|\/foreach|foreach:|template:)([^\}]+)*\}/', array($this, '_parseTag'), $contents);
+			$template = preg_replace_callback('/\{(\/if|if:echo:escape:|if:echo:|if:var:escape:|if:var:|if:|var:escape:|var:|echo:escape:|echo:|\/foreach|foreach:|template:)([^\}]+)*\}/', array($this, '_parseTag'), $contents);
 			file_put_contents($compiled_path, $template);
 		}
 
