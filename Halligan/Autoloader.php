@@ -36,6 +36,17 @@ class Autoloader {
 			return TRUE;
 		}
 
+		//See if the class is namespaced in the Vendor folder
+		foreach(get_all_paths_ordered() as $path)
+		{
+			$path = realpath($path . path('vendor') . DS . strtolower(implode(DS, $parts)) . EXT);
+			if($path !== FALSE)
+			{
+				require_once $path;
+				return TRUE;
+			}
+		}
+
 		end($parts);
 
 		return static::_loadWithoutNamespace(current($parts));

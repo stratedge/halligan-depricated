@@ -13,7 +13,7 @@ if(!defined('EXT')) define('EXT', ".php");
 /**
  * Go through each path in the paths configuration file and add it to the global paths array
  */
-foreach($paths as $key => $path)
+foreach($paths['paths'] as $key => $path)
 {
 	if(!isset($GLOBALS['halligan_paths'][$key])) $GLOBALS['halligan_paths'][$key] = realpath($path) . DS;
 }
@@ -34,10 +34,19 @@ $GLOBALS['halligan_paths']['runcard'] = array();
 /**
  * Add all the runcard paths to the global runcard array
  */
-foreach($runcard as $path)
+foreach($paths['runcard'] as $path)
 {
 	$GLOBALS['halligan_paths']['runcard'][] = realpath($path) . DS;
 }
+
+
+/**
+ * Add the vendor folder to the global paths array
+ */
+$GLOBALS['halligan_paths']['vendor'] = $paths['vendor'];
+
+
+unset($paths);
 
 
 /**

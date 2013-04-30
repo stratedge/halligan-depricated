@@ -14,7 +14,7 @@ Halligan is a free-to-use platform that seeks to create a componentized library 
 
 #### Autoloader Class
 
-*	Vendor (3rd party) support
+*	~~Vendor (3rd party) support~~
 
 
 #### CLI Class

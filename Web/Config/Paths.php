@@ -3,19 +3,24 @@
 /**
  * Application directory
  */
-$paths['app'] = 'web';
+$paths['paths']['app'] = 'Web';
 
 /**
  * Halligan directory
  */
-$paths['sys'] = 'halligan';
+$paths['paths']['sys'] = 'Halligan';
 
 /**
  * Runcard directories
  */
-$runcard = array(
+$paths['runcard'] = array(
 	//
 );
+
+/**
+ * Vendor directory
+ */
+$paths['vendor'] = 'Vendor';
 
 /* End of file Paths.php */
 /* Location: ./Web/Config/Paths.php */
