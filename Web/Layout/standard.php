@@ -16,6 +16,7 @@
 		</div>
 		<div class="container">
 			{section:main}
+			<hr />
 			<small>Page built in {execution-time} seconds using {memory-usage}mb of memory using <a href="http://github.com/xjstratedgebx/halligan" target="_blank">Halligan</a>.</small>
 		</div>
 		<script src="http://code.jquery.com/jquery.js"></script>
