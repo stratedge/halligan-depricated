@@ -135,7 +135,13 @@ class Layout {
 		if(file_exists($compiled_path) === FALSE || filemtime($path) >= filemtime($compiled_path))
 		{
 			$contents = file_get_contents($path);
-			$layout = preg_replace_callback('/\{(section:|template:)(.+)*\}/', array($this, '_parseTag'), $contents);
+
+			//Parse template tags
+			$t = new Template();
+			$contents = $t->parseTags($contents);
+			unset($t);
+
+			$layout = preg_replace_callback('/\{(section:|template:)([^\}]+)*\}/', array($this, '_parseTag'), $contents);
 			file_put_contents($compiled_path, $layout);
 		}
 

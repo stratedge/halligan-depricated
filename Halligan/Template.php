@@ -165,11 +165,20 @@ class Template {
 		if(file_exists($compiled_path) === FALSE || filemtime($path) >= filemtime($compiled_path))
 		{
 			$contents = file_get_contents($path);
-			$template = preg_replace_callback('/\{(\/if|if:echo:escape:|if:echo:|if:var:escape:|if:var:|if:|var:escape:|var:|echo:escape:|echo:|\/foreach|foreach:|template:)([^\}]+)*\}/', array($this, '_parseTag'), $contents);
+			$template = $this->parseTags($contents);
 			file_put_contents($compiled_path, $template);
 		}
 
 		return $compiled_path;
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public function parseTags($content)
+	{
+		return preg_replace_callback('/\{(\/if|if:echo:escape:|if:echo:|if:var:escape:|if:var:|if:|var:escape:|var:|echo:escape:|echo:|\/foreach|foreach:|template:)([^\}]+)*\}/', "self::_parseTag", $content);
 	}
 
 
