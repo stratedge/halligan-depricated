@@ -24,8 +24,8 @@ class Config {
 			
 			if($path !== FALSE)
 			{
-				include_once $path;
-
+				include $path;
+				
 				foreach($$config as $key => $value)
 				{
 					if(!is_array($value) || !isset(static::$config_options[$config][$key]))

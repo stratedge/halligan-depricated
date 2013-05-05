@@ -5,7 +5,7 @@ namespace Halligan;
 class Response {
 
 	protected static $_output;
-	protected static $_headers;
+	protected static $_headers = array();
 
 
 	public static function setOutput($output)
@@ -14,30 +14,158 @@ class Response {
 	}
 
 
+	//---------------------------------------------------------------------------------------------
+
+
 	public static function route()
 	{
 		URI::parseSegments();
+		
+		//Get the requested controller
+		$class = URI::getController();
 
-		$c = URI::getController();
-		$c = new $c();
+		//Make sure that the requested controller isn't off-limits
+		if(in_array($class, Config::get('controller', 'private_controllers', array())))
+		{
+			return static::show404();
+		}
+
+		/**
+		 * Grab the controller class
+		 * Circumvent regular autoloading so we can deal with the class not existing
+		 */
+		$c = Autoloader::loadController($class);
+
+		//Make sure we found a controller
+		if($c == FALSE)
+		{
+			return static::show404();
+		}
 
 		$m = URI::getMethod();
 
+		//Gets filled in if we're using a map method
+		$map = FALSE;
+
+		//Make sure we can call the requested method
 		if(!method_exists($c, $m) || !is_callable(array($c, $m), TRUE))
 		{
-			dump('404');
-			//Handle 404 error here
+			//Requested method wasn't found, before we freak out, see if there's a map method
+			$map = Config::get('controller', 'map_method', 'map');
+			
+			if(!method_exists($c, $map) || !is_callable(array($c, $map), TRUE))
+			{
+				return static::show404();
+			}
 		}
 
 		$p = URI::getParams();
 
-		call_user_func(array($c, $m), $p);
+		if($map)
+		{
+			$p = array($m, $p);
+			$m = $map;
+		}
+
+		call_user_func_array(array($c, $m), $p);
 	}
+
+
+	//---------------------------------------------------------------------------------------------
 
 
 	public static function send()
 	{
+		//Send headers
+		foreach(static::$_headers as $header)
+		{
+			header($header[0], $header[1]);
+		}
+
 		echo static::$_output;
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	public static function show404()
+	{
+		$class = Config::get('response', 'error_controller', 'ErrorController');
+
+		$c = Autoloader::loadController($class);
+		$m = 'index';
+
+		static::setStatusHeader(404);
+		$c->$m();
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	public static function addHeader($header, $overwrite = TRUE)
+	{
+		static::$_headers[] = array($header, $overwrite);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+
+
+	public static function setStatusHeader($code = 200, $text = NULL)
+	{
+		$codes = array(
+			200	=> 'OK',
+			201	=> 'Created',
+			202	=> 'Accepted',
+			203	=> 'Non-Authoritative Information',
+			204	=> 'No Content',
+			205	=> 'Reset Content',
+			206	=> 'Partial Content',
+
+			300	=> 'Multiple Choices',
+			301	=> 'Moved Permanently',
+			302	=> 'Found',
+			303	=> 'See Other',
+			304	=> 'Not Modified',
+			305	=> 'Use Proxy',
+			307	=> 'Temporary Redirect',
+
+			400	=> 'Bad Request',
+			401	=> 'Unauthorized',
+			403	=> 'Forbidden',
+			404	=> 'Not Found',
+			405	=> 'Method Not Allowed',
+			406	=> 'Not Acceptable',
+			407	=> 'Proxy Authentication Required',
+			408	=> 'Request Timeout',
+			409	=> 'Conflict',
+			410	=> 'Gone',
+			411	=> 'Length Required',
+			412	=> 'Precondition Failed',
+			413	=> 'Request Entity Too Large',
+			414	=> 'Request-URI Too Long',
+			415	=> 'Unsupported Media Type',
+			416	=> 'Requested Range Not Satisfiable',
+			417	=> 'Expectation Failed',
+			422	=> 'Unprocessable Entity',
+
+			500	=> 'Internal Server Error',
+			501	=> 'Not Implemented',
+			502	=> 'Bad Gateway',
+			503	=> 'Service Unavailable',
+			504	=> 'Gateway Timeout',
+			505	=> 'HTTP Version Not Supported'
+		);
+
+		if(!$text) $text = $codes[$code];
+
+		$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP:/1.1';
+
+		$header = sprintf("%s %d %s", $protocol, $code, $text);
+
+		static::addHeader($header, TRUE, $code);
 	}
 
 }

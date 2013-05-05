@@ -2,11 +2,7 @@
 
 namespace Halligan\Controller;
 
-use \Response;
-use \Layout;
-use \Config;
-
-class Page extends \Halligan\Controller {
+class Page extends Controller {
 
 	protected $_components = array();
 	protected $_global = array();

@@ -14,7 +14,7 @@ class Layout {
 	//---------------------------------------------------------------------------------------------
 	
 
-	public function __construct($layout)
+	public function __construct($layout = FALSE)
 	{
 		$this->setLayout($layout);
 	}

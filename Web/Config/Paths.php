@@ -22,5 +22,12 @@ $paths['runcard'] = array(
  */
 $paths['vendor'] = 'Vendor';
 
+/**
+ * Path(s) that valid controllers can be found in
+ */
+$paths['controllers'] = array(
+	'Controller'
+);
+
 /* End of file Paths.php */
 /* Location: ./Web/Config/Paths.php */

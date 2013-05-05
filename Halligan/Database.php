@@ -3,8 +3,6 @@
 namespace Halligan;
 
 use PDO;
-use \Query;
-use \DatabaseException;
 
 class Database {
 

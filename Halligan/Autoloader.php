@@ -47,9 +47,11 @@ class Autoloader {
 			}
 		}
 
+		$ns = implode("\\", array_slice($parts, 0, count($parts) - 1));
+		
 		end($parts);
-
-		return static::_loadWithoutNamespace(current($parts));
+		
+		return static::_loadWithoutNamespace(current($parts), $ns);
 
 	}
 
@@ -57,8 +59,12 @@ class Autoloader {
 	//---------------------------------------------------------------------------------------------
 
 
-	protected static function _loadWithoutNamespace($class)
-	{		
+	protected static function _loadWithoutNamespace($class, $ns = FALSE)
+	{
+		//If we've already loaded this class here, we've forsaken namespacing, so if we find the
+		//class has been loaded, just alias it to the requesting namespace
+		if(class_exists($class)) return class_alias($class, $ns ? $ns . "\\" . $class : $class);
+
 		//Go through all the system paths first
 		foreach(get_all_paths_ordered() as $path)
 		{
@@ -71,7 +77,7 @@ class Autoloader {
 		{
 			require_once $path;
 			$namespace = resolve_namespace_class($path, $class);
-			class_alias($namespace, $class);
+			class_alias($namespace, $ns ? $ns . "\\" . $class : $class);
 			return TRUE;
 		}
 
@@ -115,6 +121,30 @@ class Autoloader {
 		{
 			static::registerPath($path);
 		}
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public static function loadController($class)
+	{
+		//Go backwards through our available paths to find the controller
+		foreach(get_all_paths_ordered() as $path)
+		{
+			//Go through each path where a controller can be stored
+			foreach(Config::get('paths', 'controllers') as $c_path)
+			{
+				$loc = realpath($path . $c_path . DS . $class . EXT);
+				if($loc !== FALSE)
+				{
+					require_once $loc;
+					return new $class();
+				}
+			}
+		}
+
+		return FALSE;
 	}
 
 }

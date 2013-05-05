@@ -2,7 +2,7 @@
 
 namespace Web\Controller;
 
-class Home extends \Halligan\Controller\Page {
+class Home extends Page {
 
 	public function __construct()
 	{

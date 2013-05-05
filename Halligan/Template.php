@@ -23,7 +23,7 @@ class Template {
 
 	public function setTemplate($template)
 	{
-		if(empty($template) || !is_string($template) || is_numeric($template)) return FALSE;
+		if(empty($template) || !is_string($template)) return FALSE;
 
 		$this->_template = $template;
 	}
@@ -83,7 +83,7 @@ class Template {
 
 	protected function _hasTemplate()
 	{
-		return isset($this->_template) && !empty($this->_template) && is_string($this->_template) && !is_numeric($this->_template);
+		return isset($this->_template) && !empty($this->_template) && is_string($this->_template);
 	}
 
 

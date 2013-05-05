@@ -53,6 +53,12 @@ Halligan is a free-to-use platform that seeks to create a componentized library 
 *	~~Add insert functionality to the query class~~
 
 
+#### Response Class
+
+*	~~Deal with a url that requests a controller that does not actually exist~~
+*	~~Add the ability to declare a particular controller off-limits from direct access~~
+
+
 #### Session Class
 
 *	Add some simple session handling
