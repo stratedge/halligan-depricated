@@ -27,7 +27,7 @@ class URI {
 
 		Config::loadConfig('controller');
 
-		return ucwords(strtolower(Config::get('controller', 'default_controller')));
+		return ucwords(strtolower(Config::get('Controller', 'default_controller')));
 	}
 
 
@@ -40,7 +40,7 @@ class URI {
 
 		Config::loadConfig('controller');
 
-		return strtolower(Config::get('controller', 'default_method'));
+		return strtolower(Config::get('Controller', 'default_method'));
 	}
 
 

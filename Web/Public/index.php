@@ -9,7 +9,7 @@ define('HALLIGAN_START', microtime(TRUE));
 /**
  * Include the paths configuration before we change working directories
  */
-require '../config/paths.php';
+require '../Config/Paths.php';
 
 
 /**
@@ -21,7 +21,7 @@ chdir('../..');
 /**
  * Load the Halligan bootstrap
  */
-require 'halligan/halligan.php';
+require 'Halligan/Halligan.php';
 
 
 /* End of file index.php */

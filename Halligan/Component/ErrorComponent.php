@@ -15,7 +15,7 @@ class ErrorComponent extends Component {
 
 	public function index()
 	{
-		$tpl = new Template(Config::get('response', 'error_template', '404'));
+		$tpl = new Template(Config::get('Response', 'error_template', '404'));
 		return $tpl->build();
 	}
 

@@ -28,7 +28,7 @@ class Autoloader {
 	{
 		$parts = explode("\\", $class);
 		
-		$path = realpath(path('base') . strtolower(implode(DS, $parts)) . EXT);
+		$path = realpath(path('base') . implode(DS, $parts) . EXT);
 
 		if($path !== FALSE)
 		{
@@ -82,9 +82,9 @@ class Autoloader {
 		}
 
 		//Didn't find it yet, now we need to go through all the manually set paths
-		Config::loadConfig('autoloader');
+		Config::loadConfig('Autoloader');
 
-		foreach(Config::get('autoloader', 'paths') as $config_path)
+		foreach(Config::get('Autoloader', 'paths') as $config_path)
 		{
 			foreach(get_all_paths_ordered() as $path)
 			{
@@ -133,7 +133,7 @@ class Autoloader {
 		foreach(get_all_paths_ordered() as $path)
 		{
 			//Go through each path where a controller can be stored
-			foreach(Config::get('paths', 'controllers') as $c_path)
+			foreach(Config::get('Paths', 'controllers') as $c_path)
 			{
 				$loc = realpath($path . $c_path . DS . $class . EXT);
 				if($loc !== FALSE)

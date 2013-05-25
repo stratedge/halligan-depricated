@@ -94,7 +94,7 @@ class Template {
 	{
 		foreach(get_all_paths_ordered() as $path)
 		{
-			$path = realpath($path . 'template' . DS . $this->_template . EXT);
+			$path = realpath($path . 'Template' . DS . $this->_template . EXT);
 			if($path !== FALSE) break;
 		}
 
@@ -187,7 +187,7 @@ class Template {
 
 	protected function _getCompiledTemplatePath($path)
 	{
-		return path('app') . 'cache/template' . DS . md5($path) . EXT;
+		return path('app') . 'Cache/template' . DS . md5($path) . EXT;
 	}
 
 

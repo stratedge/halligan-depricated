@@ -27,8 +27,7 @@ class Layout {
 	{
 		if(empty($layout) || !is_string($layout) || is_numeric($layout))
 		{
-			Config::loadConfig('layout');
-			return ($this->_layout = Config::get('layout', 'default_layout'));
+			return ($this->_layout = Config::get('Layout', 'default_layout'));
 		}
 
 		return ($this->_layout = $layout);
@@ -116,7 +115,7 @@ class Layout {
 	{
 		foreach(get_all_paths_ordered() as $path)
 		{
-			$path = realpath($path . 'layout' . DS . $this->_layout . EXT);
+			$path = realpath($path . 'Layout' . DS . $this->_layout . EXT);
 			if($path !== FALSE) break;
 		}
 
@@ -154,7 +153,7 @@ class Layout {
 
 	protected function _getCompiledLayoutPath($path)
 	{
-		return path('app') . 'cache/layout' . DS . md5($path) . EXT;
+		return path('app') . 'Cache/layout' . DS . md5($path) . EXT;
 	}
 
 

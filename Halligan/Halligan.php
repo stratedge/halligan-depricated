@@ -117,14 +117,14 @@ function load_file_from_all_paths($file, $backwards = FALSE)
 /**
  * Load the utility file from all registered paths where one is found
  */
-load_file_from_all_paths('utilities.php');
+load_file_from_all_paths('Utilities.php');
 
 
 /**
  * Load all the config class(es)
  * We load them all backwards incase any one extends another
  */
-$last_path = load_file_from_all_paths('config.php', TRUE);
+$last_path = load_file_from_all_paths('Config.php', TRUE);
 
 
 /**
@@ -180,7 +180,7 @@ error_reporting(-1);
  * Load all the autoloader class(es)
  * We load them all backwards incase any one extends another
  */
-$last_path = load_file_from_all_paths('autoloader.php');
+$last_path = load_file_from_all_paths('Autoloader.php');
 
 
 /**

@@ -25,7 +25,7 @@ class Response {
 		$class = URI::getController();
 
 		//Make sure that the requested controller isn't off-limits
-		if(in_array($class, Config::get('controller', 'private_controllers', array())))
+		if(in_array($class, Config::get('Controller', 'private_controllers', array())))
 		{
 			return static::show404();
 		}
@@ -51,7 +51,7 @@ class Response {
 		if(!method_exists($c, $m) || !is_callable(array($c, $m), TRUE))
 		{
 			//Requested method wasn't found, before we freak out, see if there's a map method
-			$map = Config::get('controller', 'map_method', 'map');
+			$map = Config::get('Controller', 'map_method', 'map');
 			
 			if(!method_exists($c, $map) || !is_callable(array($c, $map), TRUE))
 			{
@@ -91,7 +91,7 @@ class Response {
 
 	public static function show404()
 	{
-		$class = Config::get('response', 'error_controller', 'ErrorController');
+		$class = Config::get('Response', 'error_controller', 'ErrorController');
 
 		$c = Autoloader::loadController($class);
 		$m = 'index';

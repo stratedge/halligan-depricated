@@ -39,14 +39,12 @@ class Page extends Controller {
 		//Add global data to the layout
 		$layout->addGlobal($this->_global);
 
-		Config::loadConfig('component');
-
 		foreach($this->_components as $component)
 		{
 			if(!isset($component->class) || empty($component->class)) continue;
 			if(!isset($component->section) || empty($component->section)) continue;
 
-			$method = isset($component->options['method']) && !empty($component->options['method']) ? $component->options['method'] : Config::get('component', 'default_method');
+			$method = isset($component->options['method']) && !empty($component->options['method']) ? $component->options['method'] : Config::get('Component', 'default_method');
 
 			$params = (!isset($component->options['params']) || empty($component->options['params']) || !is_array($component->options['params'])) ? array() : $component->options['params'];
 

@@ -20,21 +20,26 @@ class Config {
 
 		foreach(get_all_paths_ordered(TRUE) as $path)
 		{
-			$path = realpath($path . 'config' . DS . $config . '.php');
+			$path = realpath($path . 'Config' . DS . $config . '.php');
 			
 			if($path !== FALSE)
 			{
 				include $path;
 				
-				foreach($$config as $key => $value)
-				{
-					if(!is_array($value) || !isset(static::$config_options[$config][$key]))
-					{
-						static::$config_options[$config][$key] = $value;
-						continue;
-					}
+				$config = strtolower($config);
 
-					static::$config_options[$config][$key] = array_unique(array_merge(static::$config_options[$config][$key], $value));
+				if(isset($$config))
+				{
+					foreach($$config as $key => $value)
+					{
+						if(!is_array($value) || !isset(static::$config_options[$config][$key]))
+						{
+							static::$config_options[$config][$key] = $value;
+							continue;
+						}
+
+						static::$config_options[$config][$key] = array_unique(array_merge(static::$config_options[$config][$key], $value));
+					}
 				}
 			}
 		}
@@ -52,9 +57,9 @@ class Config {
 	{
 		if(!in_array($class, static::$configs_loaded)) static::loadConfig($class);
 		
-		if(!isset(static::$config_options[$class])) return $default;
+		if(!isset(static::$config_options[strtolower($class)])) return $default;
 
-		return array_get(static::$config_options[$class], $property, $default);
+		return array_get(static::$config_options[strtolower($class)], $property, $default);
 	}
 }
 

@@ -23,11 +23,11 @@ class Database {
 		//If no connection is given, try to use the current one, otherwise use the default one
 		if(is_null($conn))
 		{
-			$conn = static::$_current ?: Config::get('database', 'default_connection');
+			$conn = static::$_current ?: Config::get('Database', 'default_connection');
 		}
 		else
 		{
-			$conn = !empty($conn) ? $conn : Config::get('database', 'default_connection');
+			$conn = !empty($conn) ? $conn : Config::get('Database', 'default_connection');
 		}
 
 		//If we have already opened this connection, use the pre-existing one
@@ -54,7 +54,7 @@ class Database {
 	 */
 	protected static function _buildConnectionParams($conn)
 	{
-		$params = Config::get('database', "connections.$conn");
+		$params = Config::get('Database', "connections.$conn");
 
 		$host = isset($params['host']) && !empty($params['host']) ? sprintf("host=%s;", $params['host']) : NULL;
 		$dbname = isset($params['database']) && !empty($params['database']) ? sprintf("dbname=%s;", $params['database']) : NULL;
