@@ -13,6 +13,10 @@ class URI {
 	public static function parseSegments()
 	{
 		$uri = $_SERVER['REQUEST_URI'];
+
+		//Remove GET parameters
+		$uri = substr($uri, 0, strpos($uri, '?'));
+		
 		if(strpos($uri, '/') === 0) $uri = substr($uri, 1);
 		static::$segments = explode('/', $uri);
 	}
