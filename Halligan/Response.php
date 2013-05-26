@@ -168,6 +168,15 @@ class Response {
 		static::addHeader($header, TRUE, $code);
 	}
 
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public static function setContentType($type)
+	{
+		static::addHeader("Content-type: " . $type);
+	}
+
 }
 
 /* End of file Response.php */
