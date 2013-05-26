@@ -26,24 +26,23 @@ class Config {
 			{
 				include $path;
 				
-				$config = strtolower($config);
+				$config_lower = strtolower($config);
 
-				if(isset($$config))
+				if(isset($$config_lower))
 				{
-					foreach($$config as $key => $value)
+					foreach($$config_lower as $key => $value)
 					{
-						if(!is_array($value) || !isset(static::$config_options[$config][$key]))
+						if(!is_array($value) || !isset(static::$config_options[$config_lower][$key]))
 						{
-							static::$config_options[$config][$key] = $value;
+							static::$config_options[$config_lower][$key] = $value;
 							continue;
 						}
 
-						static::$config_options[$config][$key] = array_unique(array_merge(static::$config_options[$config][$key], $value));
+						static::$config_options[$config_lower][$key] = array_unique(array_merge(static::$config_options[$config_lower][$key], $value));
 					}
 				}
 			}
 		}
-
 		static::$configs_loaded[] = $config;
 
 		return TRUE;
