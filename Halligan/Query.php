@@ -45,10 +45,21 @@ class Query extends \Halligan\Database {
 
 	public function where($column, $value = NULL, $cond = NULL)
 	{
-		if((is_array($column) && is_assoc($column)) || is_object($column)) return $this;
-
+		if((is_array($column) && is_assoc($column)) || is_object($column))
+		{
+			foreach((array) $column as $key => $val)
+			{
+				if(is_array($val))
+				{
+					$cond = $val[0];
+					$val = $val[1];
+				}
+				
+				call_user_func_array(array($this, 'where'), array($key, $val, $cond));
+			}
+		}
 		//If column is an array, then we're trying to add multiple at once
-		if(is_array($column))
+		elseif(is_array($column))
 		{
 			foreach($column as $where)
 			{
