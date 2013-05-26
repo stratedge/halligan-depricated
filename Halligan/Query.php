@@ -125,6 +125,8 @@ class Query extends \Halligan\Database {
 	protected function _addWhere($column, $value, $cond)
 	{
 		//if(is_null($value)) return $this->_wheres[] = $this->escape($column);
+		$column = $this->_addBackticks($column);
+
 		switch($cond)
 		{
 			case 'IN':
@@ -200,6 +202,7 @@ class Query extends \Halligan\Database {
 
 	protected function _buildSelect()
 	{
+		$this->_selects = array_map(array($this, "_addBackticks"), $this->_selects);
 		return "SELECT " . implode(", ", $this->_selects);
 	}
 
@@ -233,6 +236,22 @@ class Query extends \Halligan\Database {
 		if(empty($this->_orders)) return NULL;
 
 		return "ORDER BY " . implode(", ",  $this->_orders);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	protected function _addBackticks($item)
+	{
+		$pieces = explode(".", $item);
+
+		foreach($pieces as &$piece)
+		{
+			if($piece != "*" && !empty($piece)) $piece = sprintf("`%s`", $piece);
+		}
+
+		return implode(".", $pieces);
 	}
 
 
