@@ -27,7 +27,16 @@ class URI {
 
 	public static function getController()
 	{
-		if(isset(static::$segments[0]) && !empty(static::$segments[0])) return ucwords(strtolower(static::$segments[0]));
+		if(isset(static::$segments[0]) && !empty(static::$segments[0]))
+		{
+			$class = static::$segments[0];
+
+			$pieces = explode("_", $class);
+
+			$pieces = array_map(function($val) { return ucfirst($val); }, $pieces);
+
+			return implode($pieces);
+		}
 
 		Config::loadConfig('controller');
 
@@ -40,7 +49,16 @@ class URI {
 
 	public static function getMethod()
 	{
-		if(isset(static::$segments[1]) && !empty(static::$segments[1])) return strtolower(static::$segments[1]);
+		if(isset(static::$segments[1]) && !empty(static::$segments[1]))
+		{
+			$method = static::$segments[1];
+
+			$pieces = explode("_", $method);
+
+			$pieces = array_map(function($val) { return ucfirst($val); }, $pieces);
+
+			return lcfirst(implode($pieces));
+		}
 
 		Config::loadConfig('controller');
 

@@ -2,6 +2,8 @@
 
 namespace Halligan;
 
+use ReflectionMethod;
+
 class Response {
 
 	protected static $_output;
@@ -44,27 +46,34 @@ class Response {
 
 		$m = URI::getMethod();
 
+		$p = URI::getParams();
+		
 		//Gets filled in if we're using a map method
-		$map = FALSE;
-
-		//Make sure we can call the requested method
-		if(!method_exists($c, $m) || !is_callable(array($c, $m), TRUE))
+		$map = Config::get('Controller', 'map_method', 'map');
+		
+		if(method_exists($c, $map))
 		{
-			//Requested method wasn't found, before we freak out, see if there's a map method
-			$map = Config::get('Controller', 'map_method', 'map');
-			
-			if(!method_exists($c, $map) || !is_callable(array($c, $map), TRUE))
+			$r = new ReflectionMethod($c, $map);
+			if($r->isPublic())
+			{
+				$p = array($m, $p);
+				$m = $map;
+			}
+		}
+		else
+		{
+			if(method_exists($c, $m))
+			{
+				$r = new ReflectionMethod($c, $m);
+				if(!$r->isPublic())
+				{
+					return static::show404();
+				}
+			}
+			else
 			{
 				return static::show404();
 			}
-		}
-
-		$p = URI::getParams();
-
-		if($map)
-		{
-			$p = array($m, $p);
-			$m = $map;
 		}
 
 		call_user_func_array(array($c, $m), $p);
