@@ -9,10 +9,11 @@ class Query extends \Halligan\Database {
 	protected $_insert_ignore = FALSE;
 	protected $_insert_columns = array();
 	protected $_insert_values = array();
+	protected $_limit = array();
 	protected $_on_duplicate_keys = array();
 	protected $_orders = array();
 	protected $_result;
-	protected $_selects = array('*');
+	protected $_selects = array();
 	protected $_sets = array();
 	protected $_table;
 	protected $_where_conditionals = array("=", "!=", "LIKE");
@@ -32,9 +33,19 @@ class Query extends \Halligan\Database {
 	//---------------------------------------------------------------------------------------------
 
 
-	public function select($select = '*')
+	public function select($select = '*', $escape = TRUE)
 	{
-		if(is_string($select) || (is_array($select) && !is_assoc($select)) || (is_object($select) && !is_assoc((array) $select))) $this->_selects = (array) $select;
+		if(is_array($select))
+		{
+			foreach($select as $item)
+			{
+				$this->select($item, $escape);
+			}
+		}
+		elseif(is_string($select))
+		{
+			$this->_selects[] = $escape ? $this->_addBackticks($select) : $select;
+		}
 
 		return $this;
 	}
@@ -175,6 +186,17 @@ class Query extends \Halligan\Database {
 
 
 	//---------------------------------------------------------------------------------------------
+	
+
+	public function limit($count, $offset = NULL)
+	{
+		$this->_limit = !is_null($offset) ? array($offset, $count) : array($count);
+
+		return $this;
+	}
+
+
+	//---------------------------------------------------------------------------------------------
 
 
 	public function get($table = NULL)
@@ -187,7 +209,9 @@ class Query extends \Halligan\Database {
 
 		$order = $this->_buildOrder();
 
-		$parts = array_filter(array($select, $from, $where, $order));
+		$limit = $this->_buildLimit();
+
+		$parts = array_filter(array($select, $from, $where, $order, $limit));
 
 		$sql = implode(" " , $parts) . ";";
 
@@ -202,7 +226,7 @@ class Query extends \Halligan\Database {
 
 	protected function _buildSelect()
 	{
-		$this->_selects = array_map(array($this, "_addBackticks"), $this->_selects);
+		if(empty($this->_selects)) $this->_selects = array("*");
 		return "SELECT " . implode(", ", $this->_selects);
 	}
 
@@ -213,7 +237,7 @@ class Query extends \Halligan\Database {
 	protected function _buildFrom($table)
 	{
 		$this->_table = $table ?: $this->_table;
-		return "FROM " . $this->_table;
+		return "FROM " . $this->_addBackticks($this->_table);
 	}
 
 
@@ -242,13 +266,24 @@ class Query extends \Halligan\Database {
 	//---------------------------------------------------------------------------------------------
 	
 
+	protected function _buildLimit()
+	{
+		if(empty($this->_limit)) return NULL;
+
+		return "LIMIT " . implode(", ", $this->_limit);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
 	protected function _addBackticks($item)
 	{
 		$pieces = explode(".", $item);
 
 		foreach($pieces as &$piece)
 		{
-			if($piece != "*" && !empty($piece)) $piece = sprintf("`%s`", $piece);
+			if(!empty($piece) && $piece != "*") $piece = sprintf("`%s`", $piece);
 		}
 
 		return implode(".", $pieces);
@@ -494,29 +529,45 @@ class Query extends \Halligan\Database {
 	//---------------------------------------------------------------------------------------------
 	
 
-	public function getFirstArray()
+	public function getFirstArray($table = NULL)
 	{
-		return $this->_buildGetFirst(PDO::FETCH_ASSOC);
+		return $this->_buildGetFirst(PDO::FETCH_ASSOC, $table);
 	}
 
 
 	//---------------------------------------------------------------------------------------------
 
 
-	public function getFirstObj()
+	public function getFirstObj($table = NULL)
 	{
-		return $this->_buildGetFirst(PDO::FETCH_OBJ);
+		return $this->_buildGetFirst(PDO::FETCH_OBJ, $table);
 	}
 
 
 	//---------------------------------------------------------------------------------------------
 
 
-	protected function _buildGetFirst($type)
+	protected function _buildGetFirst($type, $table = NULL)
 	{
-		if(!$this->hasResult()) $this->get();
+		if(!$this->hasResult()) $this->get($table);
 
 		return $this->_result->fetch($type);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public function getOne($table = NULL)
+	{
+		$row = $this->getFirstArray($table);
+
+		if(empty($row)) return NULL;
+
+		reset($row);
+
+		return current($row);
+
 	}
 
 
