@@ -11,7 +11,7 @@ class Input {
 			return $trim ? trim($_POST[$key]) : $_POST[$key];
 		}
 
-		return FALSE;
+		return NULL;
 	}
 
 
@@ -41,7 +41,7 @@ class Input {
 			return $trim ? trim($_GET[$key]) : $_GET[$key];
 		}
 
-		return FALSE;
+		return NULL;
 	}
 
 
@@ -71,7 +71,7 @@ class Input {
 			return $trim ? trim($_REQUEST[$key]) : $_REQUEST[$key];
 		}
 
-		return FALSE;
+		return NULL;
 	}
 
 
