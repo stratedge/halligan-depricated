@@ -142,7 +142,7 @@ unset($last_path, $config);
 set_exception_handler(function($e) {
 	if(!class_exists('Error'))
 	{
-		$last_path = load_file_from_all_paths('error.php', TRUE);
+		$last_path = load_file_from_all_paths('Error.php', TRUE);
 		$error = resolve_namespace_class($last_path, 'Error');
 		class_alias($error, 'Error');
 	}
@@ -152,7 +152,7 @@ set_exception_handler(function($e) {
 set_error_handler(function($code, $error, $file, $line) {
 	if(!class_exists('Error'))
 	{
-		$last_path = load_file_from_all_paths('error.php', TRUE);
+		$last_path = load_file_from_all_paths('Error.php', TRUE);
 		$error = resolve_namespace_class($last_path, 'Error');
 		class_alias($error, 'Error');
 	}
@@ -162,7 +162,7 @@ set_error_handler(function($code, $error, $file, $line) {
 register_shutdown_function(function() {
 	if(!class_exists('Error'))
 	{
-		$last_path = load_file_from_all_paths('error.php', TRUE);
+		$last_path = load_file_from_all_paths('Error.php', TRUE);
 		$error = resolve_namespace_class($last_path, 'Error');
 		class_alias($error, 'Error');
 	}
