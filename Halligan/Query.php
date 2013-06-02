@@ -295,9 +295,14 @@ class Query extends \Halligan\Database {
 
 	public function set($column, $value = NULL, $escape = TRUE)
 	{
-		if((is_array($column) && is_assoc($column)) || is_object($column)) return $this;
-
-		if(is_array($column))
+		if((is_array($column) && is_assoc($column)) || is_object($column))
+		{
+			foreach((array) $column as $key => $val)
+			{
+				call_user_func_array(array($this, 'set'), array($key, $val, $escape));
+			}
+		}
+		elseif(is_array($column))
 		{
 			foreach($column as $set)
 			{
@@ -306,8 +311,8 @@ class Query extends \Halligan\Database {
 		}
 		else
 		{
-			$this->_sets[] = sprintf("%s = %s", $column, $escape ? $this->escape($value) : $value);
-			$this->_insert_columns[] = $column;
+			$this->_sets[] = sprintf("%s = %s", $this->_addBackticks($column), $escape ? $this->escape($value) : $value);
+			$this->_insert_columns[] = $this->_addBackticks($column);
 			$this->_insert_values[0][] = $escape ? $this->escape($value) : $value;
 		}
 
@@ -613,6 +618,27 @@ class Query extends \Halligan\Database {
 
 		return $this;
 	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public function getSchema($table)
+	{
+		$sql = sprintf("DESCRIBE %s", $this->_addBackticks($table));
+
+		return $this->query($sql);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public function lastInsertId($name = NULL)
+	{
+		return $this->connect()->lastInsertId($name);
+	}
+
 
 }
 
