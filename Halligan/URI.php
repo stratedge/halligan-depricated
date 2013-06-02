@@ -38,8 +38,6 @@ class URI {
 			return implode($pieces);
 		}
 
-		Config::loadConfig('controller');
-
 		return ucwords(strtolower(Config::get('Controller', 'default_controller')));
 	}
 
@@ -59,8 +57,6 @@ class URI {
 
 			return lcfirst(implode($pieces));
 		}
-
-		Config::loadConfig('controller');
 
 		return strtolower(Config::get('Controller', 'default_method'));
 	}
