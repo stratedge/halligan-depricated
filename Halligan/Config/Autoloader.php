@@ -4,10 +4,10 @@
  * Paths the autoloader should search when a class is instantiated without a provided namespace
  */
 $autoloader['paths'] = array(
-	"Controller",
-	"Component",
 	"Model",
 	"Service",
+	"Controller",
+	"Component",
 	"Exception"
 );
 
