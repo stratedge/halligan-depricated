@@ -139,6 +139,7 @@ class Autoloader {
 				if($loc !== FALSE)
 				{
 					require_once $loc;
+					$class = resolve_namespace_class($loc, $class);
 					return new $class();
 				}
 			}
