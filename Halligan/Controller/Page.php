@@ -6,7 +6,7 @@ class Page extends Controller {
 
 	protected $_components = array();
 	protected $_global = array();
-	protected $_layout;
+	protected $_layout  = NULL;
 
 
 	//---------------------------------------------------------------------------------------------
@@ -31,8 +31,10 @@ class Page extends Controller {
 	//---------------------------------------------------------------------------------------------
 
 
-	public function build()
+	public function build($layout = NULL)
 	{
+		if(!is_null($layout)) $this->setLayout($layout);
+		
 		//Instantiate our layout file
 		$layout = new Layout($this->_layout);
 
@@ -76,6 +78,17 @@ class Page extends Controller {
 		}
 
 		return TRUE;
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public function setLayout($layout)
+	{
+		if(empty($layout) || !is_string($layout) || is_numeric($layout)) return FALSE;
+
+		return $this->_layout = $layout;
 	}
 }
 
