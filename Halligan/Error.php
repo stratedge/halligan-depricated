@@ -45,6 +45,8 @@ class Error {
 
 		$response .= "</html>";
 
+		ob_clean();
+		
 		ob_start();
 
 		echo $response;
