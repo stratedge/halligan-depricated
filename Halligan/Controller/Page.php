@@ -31,9 +31,11 @@ class Page extends Controller {
 	//---------------------------------------------------------------------------------------------
 
 
-	public function build($layout = NULL)
+	public function build($layout = NULL, $globals = array())
 	{
 		if(!is_null($layout)) $this->setLayout($layout);
+
+		if(!empty($globals)) $this->addGlobal($globals);
 		
 		//Instantiate our layout file
 		$layout = new Layout($this->_layout);
