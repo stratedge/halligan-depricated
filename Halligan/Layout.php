@@ -16,7 +16,7 @@ class Layout {
 
 	public function __construct($layout = NULL)
 	{
-		if(!is_null($layout)) $this->setLayout($layout);
+		$this->setLayout($layout);
 	}
 
 
