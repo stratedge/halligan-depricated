@@ -180,7 +180,7 @@ error_reporting(-1);
  * Load all the autoloader class(es)
  * We load them all backwards incase any one extends another
  */
-$last_path = load_file_from_all_paths('Autoloader.php');
+$last_path = load_file_from_all_paths('Autoloader.php', TRUE);
 
 
 /**
