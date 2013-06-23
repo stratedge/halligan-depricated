@@ -137,5 +137,27 @@ if(function_exists("array_get") === FALSE)
 	}
 }
 
+
+//---------------------------------------------------------------------------------------------
+
+
+if(function_exists("redirect") === FALSE)
+{
+	function redirect($uri, $code = 302)
+	{
+		if(strpos($uri, 'http://') !== 0 && strpos($uri, 'https://') !== 0)
+		{
+			$url = str_replace($_SERVER['SCRIPT_URL'], "", $_SERVER['SCRIPT_URI']);
+
+			if(strpos($uri, "/") !== 0) $uri = "/" . $uri;
+
+			$uri = $url . $uri;
+		}
+
+		header('Location: ' . $uri, TRUE, $code);
+		exit();
+	}
+}
+
 /* End of file Utilities.php */
 /* Location: ./Halligan/Utilities.php */
