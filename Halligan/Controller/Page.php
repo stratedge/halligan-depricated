@@ -48,9 +48,9 @@ class Page extends Controller {
 			if(!isset($component->class) || empty($component->class)) continue;
 			if(!isset($component->section) || empty($component->section)) continue;
 
-			$method = isset($component->options['method']) && !empty($component->options['method']) ? $component->options['method'] : Config::get('Component', 'default_method');
+			$method = isset($component->method) && !empty($component->method) ? $component->method : Config::get('Component', 'default_method');
 
-			$params = (!isset($component->options['params']) || empty($component->options['params']) || !is_array($component->options['params'])) ? array() : $component->options['params'];
+			$params = (!isset($component->params) || empty($component->params) || !is_array($component->params)) ? array() : $component->params;
 
 			$class = new $component->class($this->_global);
 
