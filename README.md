@@ -30,17 +30,26 @@ Halligan is a free-to-use platform that seeks to create a componentized library 
 #### Email Class
 
 *	Simple class to handle sending of emails
-  *	Setting headers
-  *	Setting recipients
-  *	Setting sender
-  *	Setting the subject
-  *	Setting the body
-  *	Sending the email
+  *	~~Setting headers~~
+  *	~~Setting one or more recipients~~
+    *	~~To~~
+    *	~~CC~~
+    *	~~BCC~~
+  *	~~Setting sender~~
+  *	~~Setting the subject~~
+  *	~~Setting the body~~
+  *	~~Sending the email~~
+  * ~~Multi-part emails (html section and plain text section)~~
+  * ~~Optionally use the Template class to build message text~~
+  * ~~Change the character set~~
 
 
 #### Input Class
 
-*	Retrieve data from $_GET, $_POST
+*	~~Retrieve single item from $_GET~~
+*	~~Retrieve all items from $_GET~~
+*	~~Retrive single item from $_POST~~
+*	~~Retrieve all items from $_POST~~
 *	Retrieve uploaded file information
 
 
