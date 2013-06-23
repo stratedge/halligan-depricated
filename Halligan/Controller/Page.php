@@ -56,7 +56,7 @@ class Page extends Controller {
 
 			if(!method_exists($class, $method)) continue;
 
-			$layout->addContentToSection(call_user_func(array($class, $method), $params), $component->section);
+			$layout->addContentToSection(call_user_func_array(array($class, $method), $params), $component->section);
 		}
 
 		Response::setOutput($layout->build());
