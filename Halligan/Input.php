@@ -89,6 +89,20 @@ class Input {
 
 		return $request;
 	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public static function file($key)
+	{
+		if(isset($_FILES[$key]) && !empty($_FILES[$key]))
+		{
+			return $_FILES[$key];
+		}
+
+		return NULL;
+	}
 }
 
 /* End of file Input.php */
