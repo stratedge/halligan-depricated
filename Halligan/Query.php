@@ -2,9 +2,9 @@
 
 namespace Halligan;
 
-use PDO;
+//use PDO;
 
-class Query extends \Halligan\Database {
+class Query {
 
 	protected $_insert_ignore = FALSE;
 	protected $_insert_columns = array();
@@ -20,12 +20,23 @@ class Query extends \Halligan\Database {
 	protected $_where_type = ' AND ';
 	protected $_wheres = array();
 
+	protected $_db = NULL;
+
 
 	//---------------------------------------------------------------------------------------------
 	
 
-	public function __construct()
+	public function __construct($db = NULL)
 	{
+		if(!is_null($db))
+		{
+			$this->_db = $db;
+		}
+		else
+		{
+			$this->_db = new Database();
+		}
+
 		return $this;
 	}
 
@@ -217,7 +228,7 @@ class Query extends \Halligan\Database {
 
 		$this->_clear();
 
-		return $this->query($sql, $this);
+		return $this->query($sql);
 	}
 
 
@@ -337,7 +348,7 @@ class Query extends \Halligan\Database {
 		
 		$this->_clear();
 
-		return $this->query($sql, $this);
+		return $this->query($sql);
 	}
 
 
@@ -413,7 +424,9 @@ class Query extends \Halligan\Database {
 			$this->values($data, $escape);
 		}
 
-		return $this->_buildInsert($table);
+		$sql = $this->_buildInsert($table);
+
+		return $this->query($sql);
 	}
 
 
@@ -436,7 +449,7 @@ class Query extends \Halligan\Database {
 
 		$this->_clear();
 
-		return $this->query($sql, $this);
+		return $sql;
 	}
 
 
@@ -482,117 +495,16 @@ class Query extends \Halligan\Database {
 
 	public function escape($value)
 	{
-		return $this->connect()->quote($value);
+		return $this->_db->connect()->quote($value);
 	}
 
 
 	//---------------------------------------------------------------------------------------------
 
-
-	public function hasResult()
-	{
-		return !empty($this->_result) && is_object($this->_result) && is_a($this->_result, 'PDOStatement');
-	}
-
-
-	//---------------------------------------------------------------------------------------------
-	
-
-	public function getArray($table = NULL)
-	{
-		return $this->_buildResultArray(PDO::FETCH_ASSOC, $table);
-	}
-
-
-	//---------------------------------------------------------------------------------------------
-	
-
-	public function getObj($table = NULL)
-	{
-		return $this->_buildResultArray(PDO::FETCH_OBJ, $table);
-	}
-
-
-	//---------------------------------------------------------------------------------------------
-	
-
-	protected function _buildResultArray($type, $table)
-	{
-		if(!$this->hasResult() || !is_null($table)) $this->get($table);
-
-		//PDO returns FALSE if the query errors
-		if($this->_result === FALSE) dump($this->getError());
-
-		$data = array();
-
-		while($item = $this->_result->fetch($type)) $data[] = $item;
-
-		return $data;
-	}
-
-
-	//---------------------------------------------------------------------------------------------
-	
-
-	public function getFirstArray($table = NULL)
-	{
-		return $this->_buildGetFirst(PDO::FETCH_ASSOC, $table);
-	}
-
-
-	//---------------------------------------------------------------------------------------------
-
-
-	public function getFirstObj($table = NULL)
-	{
-		return $this->_buildGetFirst(PDO::FETCH_OBJ, $table);
-	}
-
-
-	//---------------------------------------------------------------------------------------------
-
-
-	protected function _buildGetFirst($type, $table = NULL)
-	{
-		if(!$this->hasResult()) $this->get($table);
-
-		return $this->_result->fetch($type);
-	}
-
-
-	//---------------------------------------------------------------------------------------------
-	
-
-	public function getOne($table = NULL)
-	{
-		$row = $this->getFirstArray($table);
-
-		if(empty($row)) return NULL;
-
-		reset($row);
-
-		return current($row);
-
-	}
-
-
-	//---------------------------------------------------------------------------------------------
-	
-
-	public function numRows()
-	{
-		if(!$this->hasResult()) $this->get();
-
-		return $this->_result->rowCount();
-	}
-
-
-	//---------------------------------------------------------------------------------------------
-	
 
 	public function startTransaction()
 	{
-		$this->connect()->beginTransaction();
+		$this->_db->connect()->beginTransaction();
 
 		return $this;
 	}
@@ -603,7 +515,7 @@ class Query extends \Halligan\Database {
 
 	public function rollBack()
 	{
-		$this->connect()->rollBack();
+		$this->_db->connect()->rollBack();
 
 		return $this;
 	}
@@ -614,7 +526,7 @@ class Query extends \Halligan\Database {
 
 	public function commit()
 	{
-		$this->connect()->commit();
+		$this->_db->connect()->commit();
 
 		return $this;
 	}
@@ -636,7 +548,16 @@ class Query extends \Halligan\Database {
 
 	public function lastInsertId($name = NULL)
 	{
-		return $this->connect()->lastInsertId($name);
+		return $this->_db->connect()->lastInsertId($name);
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public function query($sql)
+	{
+		return $this->_db->query($sql);
 	}
 
 

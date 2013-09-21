@@ -77,18 +77,19 @@ class Database {
 	 * @param	[type]	$query	[description]
 	 * @return	[type]			[description]
 	 */
-	public function query($sql, Query $query = NULL)
+	public function query($sql)
 	{
-		if(is_null($query)) $query = new Query();
-
-		$query->_result = $this->connect()->query($sql);
+		$result = $this->connect()->query($sql);
 
 		//Something failed, find out what
-		if($query->_result === FALSE) throw new DatabaseException($this->getError(), 1);
+		if($result === FALSE) throw new DatabaseException($this->getError(), 1);
 
-		return $query;
+		return new QueryResult($result, $this->connect()->lastInsertId());
 	}
 
+
+	//---------------------------------------------------------------------------------------------
+	
 
 	public function getError()
 	{
