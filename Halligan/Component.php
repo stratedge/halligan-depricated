@@ -14,7 +14,7 @@ class Component {
 	public function getGlobal($key = NULL)
 	{
 		//No key or invalid key? 
-		if(empty($key) || is_object($key) || is_assoc($key)) return $this->_global;
+		if(empty($key) || is_object($key) || is_assoc($key) || is_bool($key)) return $this->_global;
 
 		if(is_array($key))
 		{
