@@ -43,6 +43,7 @@ class Config {
 				}
 			}
 		}
+		
 		static::$configs_loaded[] = $config;
 
 		return TRUE;
@@ -52,7 +53,7 @@ class Config {
 	//---------------------------------------------------------------------------------------------
 	
 
-	public static function get($class, $property, $default = FALSE)
+	public static function get($class, $property, $default = NULL)
 	{
 		if(!in_array($class, static::$configs_loaded)) static::loadConfig($class);
 		
