@@ -2,8 +2,6 @@
 
 namespace Halligan;
 
-//use PDO;
-
 class Query {
 
 	protected $_insert_ignore = FALSE;
@@ -34,7 +32,7 @@ class Query {
 		}
 		else
 		{
-			$this->_db = new Database();
+			$this->_db = new \Database();
 		}
 
 		return $this;
