@@ -1,6 +1,9 @@
 # Halligan
 
 
+[![Build Status](https://travis-ci.org/xjstratedgebx/halligan.png?branch=master)](https://travis-ci.org/xjstratedgebx/halligan)
+
+
 ## Description
 
 Halligan is a free-to-use platform that seeks to create a componentized library system and versioned-extendability.
