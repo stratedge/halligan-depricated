@@ -70,13 +70,31 @@ class QueryResult {
 	//---------------------------------------------------------------------------------------------
 	
 
-	public function getOne($style = 'object')
+	public function getRow($style = 'object')
 	{
 		if($this->resultIsPDO())
 		{
 			$style = $this->_getPDOFetchStyle($style);
 
 			return $this->_result->fetch($style);
+		}
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public function getOne()
+	{
+		if($this->resultIsPDO())
+		{
+			$style = $this->_getPDOFetchStyle('array');
+
+			$row = $this->_result->fetch($style);
+
+			$row = array_values($row);
+
+			return isset($row[0]) ? $row[0] : NULL;
 		}
 	}
 
