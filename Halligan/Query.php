@@ -14,7 +14,7 @@ class Query {
 	protected $_selects = array();
 	protected $_sets = array();
 	protected $_table;
-	protected $_where_conditionals = array("=", "!=", ">", "<", "LIKE");
+	protected $_where_conditionals = array("=", "!=", ">", "<", ">=", "<=", "LIKE");
 	protected $_where_type = ' AND ';
 	protected $_wheres = array();
 
