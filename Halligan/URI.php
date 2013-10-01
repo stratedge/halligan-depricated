@@ -70,7 +70,7 @@ class URI {
 	public static function getParams()
 	{
 		//If our first URI segment exists and is an integer, include it here
-		if(isset(static::$segments[1]) && is_int_val(static::$segments[1])) return static::$segments;
+		if(isset(static::$segments[1]) && is_int_val(static::$segments[1])) return array_slice(static::$segments, 1);
 
 		//Otherwise exclude the first segment as it was used as the method
 		return array_slice(static::$segments, 2);
