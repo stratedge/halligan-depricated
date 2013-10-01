@@ -47,7 +47,8 @@ class URI {
 
 	public static function getMethod()
 	{
-		if(isset(static::$segments[1]) && !empty(static::$segments[1]))
+		//If we have a first URI segment and it's not an integer, use it as our method name
+		if(isset(static::$segments[1]) && !empty(static::$segments[1]) && !is_int_val(static::$segments[1]))
 		{
 			$method = static::$segments[1];
 
@@ -58,6 +59,7 @@ class URI {
 			return lcfirst(implode($pieces));
 		}
 
+		//Otherwise, return the default method name
 		return strtolower(Config::get('Controller', 'default_method'));
 	}
 
@@ -67,6 +69,10 @@ class URI {
 
 	public static function getParams()
 	{
+		//If our first URI segment exists and is an integer, include it here
+		if(isset(static::$segments[1]) && is_int_val(static::$segments[1])) return static::$segments;
+
+		//Otherwise exclude the first segment as it was used as the method
 		return array_slice(static::$segments, 2);
 	}
 

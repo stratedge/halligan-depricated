@@ -159,5 +159,17 @@ if(function_exists("redirect") === FALSE)
 	}
 }
 
+
+//---------------------------------------------------------------------------------------------
+
+
+if(function_exists("is_int_val") === FALSE)
+{
+	function is_int_val($val)
+	{
+		return is_numeric($val) && intval($val) == $val;
+	}
+}
+
 /* End of file Utilities.php */
 /* Location: ./Halligan/Utilities.php */
