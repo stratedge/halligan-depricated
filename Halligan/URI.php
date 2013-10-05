@@ -12,7 +12,15 @@ class URI {
 
 	public static function parseSegments()
 	{
-		$uri = $_SERVER['REQUEST_URI'];
+		//Get the correct URI based on the URL or the CLI appropriately
+		if(substr(PHP_SAPI, 0, 3) == 'cli')
+		{
+			$uri = implode("/", array_slice($_SERVER['argv'], 1));
+		}
+		else
+		{
+			$uri = $_SERVER['REQUEST_URI'];
+		}	
 
 		//Remove GET parameters
 		if(strpos($uri, '?') !== FALSE)	$uri = substr($uri, 0, strpos($uri, '?'));

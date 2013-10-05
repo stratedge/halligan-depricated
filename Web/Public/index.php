@@ -9,13 +9,13 @@ define('HALLIGAN_START', microtime(TRUE));
 /**
  * Include the paths configuration before we change working directories
  */
-require '../Config/Paths.php';
+require realpath(__DIR__ . '/../Config/Paths.php');
 
 
 /**
  * Change the current working directory
  */
-chdir('../..');
+chdir(realpath(__DIR__ . '/../..'));
 
 
 /**
