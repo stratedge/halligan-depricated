@@ -22,7 +22,7 @@ Halligan is a free-to-use platform that seeks to create a componentized library 
 
 #### CLI Class
 
-*	Allow calls to be made to the application through the command line interface (CLI)
+*	~~Allow calls to be made to the application through the command line interface (CLI)~~
 
 
 #### Config Class
@@ -61,7 +61,7 @@ Halligan is a free-to-use platform that seeks to create a componentized library 
 *	Make the Database/Query classes usable beyond just MySQL
 *	Add joins to the query class
 *	Add where-grouping capability to the query class
-*	Add limiting of query results
+*	~~Add limiting of query results~~
 *	~~Add insert functionality to the query class~~
 
 
