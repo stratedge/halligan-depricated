@@ -6,7 +6,7 @@ class Input {
 
 	public static function post($key, $trim = TRUE)
 	{
-		if(isset($_POST[$key]) && !empty($_POST[$key]))
+		if(isset($_POST[$key]) && (!empty($_POST[$key]) || $_POST[$key] === "0"))
 		{
 			return $trim ? trim($_POST[$key]) : $_POST[$key];
 		}
@@ -36,7 +36,7 @@ class Input {
 
 	public static function get($key, $trim = TRUE)
 	{
-		if(isset($_GET[$key]) && !empty($_GET[$key]))
+		if(isset($_GET[$key]) && (!empty($_GET[$key]) || $_GET[$key] === "0"))
 		{
 			return $trim ? trim($_GET[$key]) : $_GET[$key];
 		}
