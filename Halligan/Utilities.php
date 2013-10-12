@@ -37,7 +37,22 @@ if(function_exists("dump") === FALSE)
 
 if(function_exists("us2cc") === FALSE)
 {
+	/**
+	 * @deprecated
+	 */
 	function us2cc($str, $capitalize_first = TRUE)
+	{
+		return sc2cc($str, $capitalize_first);
+	}
+}
+
+
+//---------------------------------------------------------------------------------------------
+
+
+if(function_exists("sc2cc") === FALSE)
+{
+	function sc2cc($str, $capitalize_first = TRUE)
 	{
 		$parts = explode("_", $str);
 		foreach($parts as $key => &$part)
@@ -47,6 +62,22 @@ if(function_exists("us2cc") === FALSE)
 		}
 
 		return implode(NULL, $parts);
+	}
+}
+
+
+//---------------------------------------------------------------------------------------------
+
+
+if(function_exists("cc2sc") === FALSE)
+{
+	function cc2sc($str)
+	{
+		preg_match_all('/[A-Z][^A-Z]+/', ucfirst($str), $matches);
+
+		$matches = array_map(function($val) { return strtolower($val); }, $matches[0]);
+
+		return implode("_", $matches);
 	}
 }
 
