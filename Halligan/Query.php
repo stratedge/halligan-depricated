@@ -187,7 +187,7 @@ class Query {
 		}
 		else
 		{
-			$this->_orders[] = sprintf("%s %s", $column, $dir == 'DESC' ? 'DESC' : 'ASC');
+			$this->_orders[] = in_array(strtoupper($dir), array("ASC", "DESC"), TRUE) ? sprintf("%s %s", $column, strtoupper($dir)) : $column;
 		}
 
 		return $this;
