@@ -86,14 +86,23 @@ class Response {
 	public static function send($exit = FALSE)
 	{
 		//Send headers
-		foreach(static::$_headers as $header)
-		{
-			header($header[0], $header[1]);
-		}
+		self::sendHeaders();
 
 		if($exit) exit(static::$_output);
 		
 		echo static::$_output;
+	}
+
+
+	//---------------------------------------------------------------------------------------------
+	
+
+	public static function sendHeaders()
+	{
+		foreach(static::$_headers as $header)
+		{
+			header($header[0], $header[1]);
+		}
 	}
 
 
